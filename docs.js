@@ -1,5 +1,6 @@
-/* docs page: scrollspy nav, image lightbox, mobile sidebar */
-(() => {
+/* docs page: scrollspy nav, image lightbox, mobile sidebar.
+   Exposed as initDocsUI() and called by docs-render.js after the DOM is built. */
+window.initDocsUI = function initDocsUI() {
   'use strict';
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -66,9 +67,10 @@
   const open = (src, alt) => { lbImg.src = src; lbImg.alt = alt || ''; lb.classList.add('open'); document.body.style.overflow = 'hidden'; };
   const close = () => { lb.classList.remove('open'); document.body.style.overflow = ''; setTimeout(() => { lbImg.src = ''; }, 300); };
   document.addEventListener('click', e => {
+    if (document.body.classList.contains('edit-on')) return; // editor handles image clicks
     const img = e.target.closest('.doc-img');
     if (img) { open(img.dataset.full || img.src, img.alt); return; }
     if (e.target === lb || e.target.closest('.lightbox-close')) close();
   });
   addEventListener('keydown', e => { if (e.key === 'Escape' && lb.classList.contains('open')) close(); });
-})();
+};
