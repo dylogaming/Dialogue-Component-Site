@@ -4,29 +4,57 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
-  /* ---- scrollspy: highlight active section in sidebar ---- */
+  /* ---- scrollspy: highlight active section/subsection in sidebar ---- */
   const links = $$('.docs-nav a');
   const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
-  const sections = $$('.doc-section');
-  let current = null;
-  const spy = new IntersectionObserver((ents) => {
-    ents.forEach(en => { if (en.isIntersecting) current = en.target.id; });
-    // pick the topmost intersecting section
-    const visible = sections.filter(s => {
-      const r = s.getBoundingClientRect();
-      return r.top < window.innerHeight * 0.5 && r.bottom > 0;
-    });
-    const id = (visible[0] || {}).id || current;
-    if (id && map.has(id)) {
-      links.forEach(a => a.classList.remove('active'));
-      map.get(id).classList.add('active');
-    }
-  }, { rootMargin: '-10% 0px -60% 0px', threshold: [0, 0.2, 1] });
-  sections.forEach(s => spy.observe(s));
-
-  /* close mobile sidebar after clicking a link */
+  // every scroll target, in document order: sections AND their h3 subsections
+  const targets = $$('.doc-section, .doc-section h3[id]').filter(el => el.id && map.has(el.id));
   const side = $('#docsSide'), toggle = $('#sideToggle');
+
+  const keepInView = (a) => {
+    const cont = a.closest('.docs-side'); if (!cont) return;
+    const ar = a.getBoundingClientRect(), cr = cont.getBoundingClientRect();
+    if (ar.top < cr.top) cont.scrollTop -= (cr.top - ar.top) + 10;
+    else if (ar.bottom > cr.bottom) cont.scrollTop += (ar.bottom - cr.bottom) + 10;
+  };
+
+  let activeId = null;
+  const setActive = (id) => {
+    if (!id || id === activeId || !map.has(id)) return;
+    activeId = id;
+    links.forEach(a => a.classList.remove('active'));
+    $$('.nav-cat').forEach(li => li.classList.remove('open'));
+    const a = map.get(id);
+    a.classList.add('active');
+    // open the parent category so its subsections show
+    const cat = a.closest('.nav-cat');
+    if (cat) cat.classList.add('open');
+    keepInView(a);
+  };
+
+  const computeActive = () => {
+    // a target becomes current once its top rises above ~1/3 of the viewport
+    const line = innerHeight * 0.3;
+    let id = targets[0] && targets[0].id;
+    for (const t of targets) {
+      if (t.getBoundingClientRect().top - line <= 0) id = t.id; else break;
+    }
+    // snap to the final target when scrolled to the very bottom
+    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 2) id = targets[targets.length - 1].id;
+    setActive(id);
+  };
+
+  let ticking = false;
+  addEventListener('scroll', () => {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(() => { computeActive(); ticking = false; });
+  }, { passive: true });
+  addEventListener('resize', computeActive, { passive: true });
+  computeActive();
+
+  /* instant feedback on click; close mobile sidebar */
   links.forEach(a => a.addEventListener('click', () => {
+    setActive(a.getAttribute('href').slice(1));
     if (innerWidth <= 900) { side.classList.remove('open'); toggle?.classList.remove('open'); }
   }));
   toggle?.addEventListener('click', () => {
