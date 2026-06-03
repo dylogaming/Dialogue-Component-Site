@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dialogue Component · Cinematic Dialogue for Unreal Engine</title>
+<meta name="description" content="A node-graph dialogue system for Unreal Engine 5. Branching conversations, conditions, save system, CSV data tables, cinematic cameras, and rich text, all in your browser." />
+<link rel="icon" type="image/png" href="assets/icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- progress + ambient layers -->
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
+<div class="aurora" aria-hidden="true">
+  <span class="blob b1"></span>
+  <span class="blob b2"></span>
+  <span class="blob b3"></span>
+</div>
+<div class="grid-overlay" aria-hidden="true"></div>
+
+<!-- nav -->
+<header class="nav" id="nav">
+  <a class="brand" href="#top">
+    <img src="assets/icon.png" alt="" width="34" height="34" />
+    <span>Dialogue<b>Component</b></span>
+  </a>
+  <nav class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#editor">Editor</a>
+    <a href="#flow">Branching</a>
+    <a href="#timeline">Updates</a>
+  </nav>
+  <a class="btn btn-ghost nav-cta" href="https://github.com/dylogaming/Dialogue-Component/wiki" target="_blank" rel="noopener">Documentation</a>
+</header>
+
+<main id="top">
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <div class="pill reveal" data-reveal>
+          <span class="dot"></span> Built for Unreal Engine 5.1+
+        </div>
+        <h1 class="reveal" data-reveal>
+          Conversations that
+          <span class="grad">feel cinematic.</span>
+        </h1>
+        <p class="lead reveal" data-reveal>
+          A complete node-graph dialogue system for Unreal Engine. Branching choices,
+          conditions, a full save system, CSV data tables, and camera direction.
+          Author entire scenes from a browser-based editor.
+        </p>
+        <div class="hero-cta reveal" data-reveal>
+          <a class="btn btn-primary magnetic" href="https://github.com/dylogaming/Dialogue-Component/wiki" target="_blank" rel="noopener">
+            <span>Read the Docs</span>
+            <svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a class="btn btn-ghost magnetic" href="#flow">See it branch</a>
+        </div>
+        <div class="hero-meta reveal" data-reveal>
+          <div><b data-count="5">0</b><span>UE version 5.1 +</span></div>
+          <div><b data-count="12">0</b><span>Feature modules</span></div>
+          <div><b data-count="100">0</b><span>% Blueprint</span></div>
+        </div>
+      </div>
+
+      <!-- live typing dialogue demo -->
+      <div class="hero-demo reveal" data-reveal>
+        <div class="demo-stage">
+          <div class="demo-scene">
+            <span class="scene-tag">NPC · Wraith</span>
+          </div>
+          <div class="dialogue-box" id="dialogueBox">
+            <div class="dia-name">Wraith</div>
+            <p class="dia-text" id="diaText"></p>
+            <div class="dia-choices" id="diaChoices"></div>
+            <div class="dia-caret">▾</div>
+          </div>
+        </div>
+        <div class="demo-glow"></div>
+      </div>
+    </div>
+
+    <a class="scroll-hint" href="#features" aria-label="Scroll">
+      <span></span>
+    </a>
+  </section>
+
+  <!-- ================= MARQUEE ================= -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track" id="marquee">
+      <span>Branching Dialogue</span><i>✦</i>
+      <span>Pass / Fail Conditions</span><i>✦</i>
+      <span>Save &amp; Load System</span><i>✦</i>
+      <span>CSV Data Tables</span><i>✦</i>
+      <span>Cinematic Cameras</span><i>✦</i>
+      <span>Rich Text &amp; Icons</span><i>✦</i>
+      <span>Character-by-character Typing</span><i>✦</i>
+      <span>Level Sequences</span><i>✦</i>
+    </div>
+  </div>
+
+  <!-- ================= FEATURES ================= -->
+  <section class="section" id="features">
+    <div class="section-head reveal" data-reveal>
+      <span class="eyebrow">Everything in one component</span>
+      <h2>Drop one component on an actor.<br/><span class="grad">Get an entire dialogue engine.</span></h2>
+    </div>
+
+    <div class="feature-grid">
+      <article class="card span-2 reveal" data-reveal data-tilt>
+        <div class="card-ic">🌿</div>
+        <h3>Branching dialogues</h3>
+        <p>Author conversations as numbered branches. Each player response can continue the scene, loop back, or end on the spot. Zelda-style continue buttons appear automatically when a choice is empty.</p>
+      </article>
+
+      <article class="card reveal" data-reveal data-tilt>
+        <div class="card-ic">⚖️</div>
+        <h3>Conditions</h3>
+        <p>Gate responses on player stats. Check <code>Gold ≥ 3</code> or <code>Evidence ≥ 1</code>, then subtract on success. Failed choices can stay shown, grey out, or vanish.</p>
+      </article>
+
+      <article class="card reveal" data-reveal data-tilt>
+        <div class="card-ic">💾</div>
+        <h3>Save system</h3>
+        <p>One save ref captures every actor's transform, current branch, and player conditions, restored exactly on load. Drops into your own save flow too.</p>
+      </article>
+
+      <article class="card span-2 reveal" data-reveal data-tilt>
+        <div class="card-ic">📊</div>
+        <h3>CSV data tables</h3>
+        <p>Write whole conversations in Excel and import them straight into a data table. Branches, choices, audio, and animations resolve by name. Export any table back out for round-trip editing.</p>
+        <pre class="mini-code"><span class="c-key">Conditions</span> (("Energy", 1),("Money", 5))</pre>
+      </article>
+
+      <article class="card reveal" data-reveal data-tilt>
+        <div class="card-ic">🎬</div>
+        <h3>Moving actor &amp; camera</h3>
+        <p>Spline-driven rails, doors, elevators, and helicopter fly-bys. The camera tracker keeps framing consistent across any character.</p>
+      </article>
+
+      <article class="card reveal" data-reveal data-tilt>
+        <div class="card-ic">🎨</div>
+        <h3>Rich text &amp; icons</h3>
+        <p>Inline color and style tags, speech-bubble and map icons, custom fonts, and true character-by-character typing at any text length.</p>
+      </article>
+
+      <article class="card reveal" data-reveal data-tilt>
+        <div class="card-ic">🎥</div>
+        <h3>Level sequences</h3>
+        <p>Fire off level sequences mid-conversation with fade in/out and per-shot settings for fully directed story beats.</p>
+      </article>
+
+      <article class="card span-3 wide reveal" data-reveal data-tilt>
+        <div class="card-ic">🖱️</div>
+        <h3>An editor that lives in your browser</h3>
+        <p>The Editor Utility keeps every variable visible while you work: preview camera angles, test conditions, and tweak branches with instant sync back to the Details panel. Built for fast iteration, not menu-diving.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ================= EDITOR SHOWPIECE ================= -->
+  <section class="section editor-sec" id="editor">
+    <div class="split">
+      <div class="split-copy reveal" data-reveal>
+        <span class="eyebrow">The Editor Utility</span>
+        <h2>Build, preview, and test<br/><span class="grad">without leaving the canvas.</span></h2>
+        <ul class="check-list">
+          <li>Variables stay visible at all times for quick edits</li>
+          <li>Preview camera angles live in the viewport</li>
+          <li>Test pass / fail conditions before you ship</li>
+          <li>Edits sync straight to the Details panel</li>
+          <li>Keyboard shortcuts, arrow-key navigation, a Function Typer</li>
+        </ul>
+        <a class="btn btn-primary magnetic" href="https://github.com/dylogaming/Dialogue-Component/wiki/04.-Editor-Utility-Widget" target="_blank" rel="noopener">Explore the editor</a>
+      </div>
+
+      <!-- fake node graph -->
+      <div class="split-visual reveal" data-reveal>
+        <div class="node-graph" id="nodeGraph">
+          <svg class="edges" id="edges" preserveAspectRatio="none"></svg>
+          <div class="node n-start" data-node="start">
+            <span class="node-head">🏁 START</span>
+            <span class="node-sub">Branch 1</span>
+          </div>
+          <div class="node n-npc" data-node="npc">
+            <span class="node-head">NPC Text</span>
+            <span class="node-sub">"You found me at last..."</span>
+          </div>
+          <div class="node n-a" data-node="a">
+            <span class="node-head">Choice A</span>
+            <span class="node-sub">→ Branch 3</span>
+          </div>
+          <div class="node n-b" data-node="b">
+            <span class="node-head">Choice B</span>
+            <span class="node-sub cond">Gold ≥ 3</span>
+          </div>
+          <div class="node n-end" data-node="end">
+            <span class="node-head">End Dialogue</span>
+            <span class="node-sub">reset → Branch 1</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= INTERACTIVE BRANCHING ================= -->
+  <section class="section flow-sec" id="flow">
+    <div class="section-head reveal" data-reveal>
+      <span class="eyebrow">Play the branch</span>
+      <h2>Every choice changes the scene.</h2>
+      <p class="sub">A tiny taste of the runtime. Pick a reply, watch the conversation follow.</p>
+    </div>
+
+    <div class="player reveal" data-reveal>
+      <div class="player-screen">
+        <div class="ps-name" id="psName">Merchant</div>
+        <p class="ps-text" id="psText"></p>
+        <div class="ps-choices" id="psChoices"></div>
+      </div>
+      <div class="player-stats">
+        <div class="stat"><span>Gold</span><b id="statGold">5</b></div>
+        <div class="stat"><span>Evidence</span><b id="statEvidence">0</b></div>
+        <button class="reset-btn" id="resetFlow">↺ Restart</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TIMELINE ================= -->
+  <section class="section" id="timeline">
+    <div class="section-head reveal" data-reveal>
+      <span class="eyebrow">Always shipping</span>
+      <h2>A living, updated asset.</h2>
+      <p class="sub">A look at the most recent entries from the change log.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item reveal" data-reveal><time>Feb 2026</time><p>Bind on actor destroyed; interaction ring cleans itself up outside dialogue.</p></div>
+      <div class="tl-item reveal" data-reveal><time>Feb 2026</time><p>Per-property save toggles; door + save-system example fixes.</p></div>
+      <div class="tl-item reveal" data-reveal><time>Dec 2025</time><p>In-world dialogue widget for non-critical chatter; auto-complete timing.</p></div>
+      <div class="tl-item reveal" data-reveal><time>Nov 2025</time><p>Camera assignment by name on CSV import; pass &amp; fail conditions.</p></div>
+      <div class="tl-item reveal" data-reveal><time>Sep 2025</time><p>Collapsible variable groups, in-editor preview interaction, Function Typer.</p></div>
+      <div class="tl-item reveal" data-reveal><time>Jun 2025</time><p>Rich text &amp; icons at any length; hide/disable choices by condition; UI fade out.</p></div>
+    </div>
+  </section>
+
+  <!-- ================= CTA ================= -->
+  <section class="cta-sec">
+    <div class="cta-card reveal" data-reveal>
+      <h2>Write your story.<br/><span class="grad">Let the engine direct it.</span></h2>
+      <p>Branching, conditions, saves, cameras, and CSV pipelines. One component, fully in Blueprint.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary magnetic" href="https://github.com/dylogaming/Dialogue-Component/wiki" target="_blank" rel="noopener">Get started</a>
+        <a class="btn btn-ghost magnetic" href="https://github.com/dylogaming/Dialogue-Component/wiki/03.-Getting-Started" target="_blank" rel="noopener">Setup guide</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="foot-brand">
+    <img src="assets/icon.png" alt="" width="28" height="28" />
+    <span>Dialogue Component</span>
+  </div>
+  <p>Made by DYLO Gaming · Documentation on the <a href="https://github.com/dylogaming/Dialogue-Component/wiki" target="_blank" rel="noopener">GitHub Wiki</a></p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
