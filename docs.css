@@ -67,6 +67,8 @@
 .doc-step-text{min-width:0}
 .doc-step-text > *:first-child{margin-top:0}
 .doc-step-media{min-width:0;display:flex;flex-direction:column;gap:12px;align-items:center}
+.doc-text-block{margin:8px 0 4px}
+.doc-text-block p:first-child{margin-top:0}
 @media (max-width:640px){.doc-step{grid-template-columns:1fr}}
 
 /* images */

@@ -11,14 +11,10 @@
   /* ---------- cursor glow (rAF-smoothed) ---------- */
   const glow = $('#cursorGlow');
   if (glow && !reduce && !matchMedia('(pointer:coarse)').matches) {
-    let tx = innerWidth / 2, ty = innerHeight / 2, cx = tx, cy = ty;
-    addEventListener('pointermove', e => { tx = e.clientX; ty = e.clientY; }, { passive: true });
-    const tick = () => {
-      cx += (tx - cx) * 0.2; cy += (ty - cy) * 0.2;
-      glow.style.transform = `translate(${cx}px,${cy}px) translate(-50%,-50%)`;
-      requestAnimationFrame(tick);
-    };
-    tick();
+    // track the pointer 1:1 with no smoothing so there is zero lag/drag
+    addEventListener('pointermove', e => {
+      glow.style.transform = `translate(${e.clientX}px,${e.clientY}px) translate(-50%,-50%)`;
+    }, { passive: true });
     const hot = 'a,button,.card,[data-tilt],.dia-choice,.ps-choice';
     addEventListener('pointerover', e => glow.classList.toggle('big', !!e.target.closest(hot)), { passive: true });
   }
